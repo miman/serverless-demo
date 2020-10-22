@@ -29,6 +29,7 @@ const serverlessConfiguration: Serverless = {
       AWS_ACCOUNT_ID: propertyReader.readParameter("AWS_ACCOUNT_ID"),
       IotEndpoint: 'a3o5r22icumisa-ats.iot.eu-west-1.amazonaws.com',
       NotificationQueueName: 'send-notification-${opt:stage, self:provider.stage}',
+      NotificationQueueURL: 'https://sqs.${opt:region, self:provider.region}.amazonaws.com/${self:provider.environment.AWS_ACCOUNT_ID}/${self:provider.environment.NotificationQueueName}',
       TaskTopicName: 'viot/{vehicleId}/task/newTask',
       TasksDbName: 'tasks',
     },
@@ -61,7 +62,7 @@ const serverlessConfiguration: Serverless = {
         Resource: [
           "arn:aws:dynamodb:${opt:region, self:provider.region}:${self:provider.environment.AWS_ACCOUNT_ID}:table/${self:provider.environment.TasksDbName}"
         ]
-      }
+      },
     ]
   },
   functions: {

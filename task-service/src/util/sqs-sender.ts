@@ -13,7 +13,7 @@ export function sendMsgOnSqs(msg: string, qURL: string): Promise<SQS.SendMessage
       MessageBody: msg,
       QueueUrl: qURL
     };
-    console.log("Sending msg on SQS, msg: " + msg);
+    console.log("Sending msg on SQS topic '" + qURL + "', msg: " + msg);
     return sqs.sendMessage(sendParams).promise().then((data: SQS.SendMessageResult) => {
       let response = null;
   
