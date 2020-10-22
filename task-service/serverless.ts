@@ -75,7 +75,10 @@ const serverlessConfiguration: Serverless = {
             path: 'task',
           }
         }
-      ]
+      ],
+      tags: {
+        solution: "ServerlessDemo"
+      }
     },
     getTasks: {
       handler: 'src/handler.getTasks',
@@ -86,7 +89,10 @@ const serverlessConfiguration: Serverless = {
             path: 'task',
           }
         }
-      ]
+      ],
+      tags: {
+        solution: "ServerlessDemo"
+      }
     },
     taskStatusEventHandler: {
       handler: 'src/handler.handleTaskStatusEvent',
@@ -98,23 +104,14 @@ const serverlessConfiguration: Serverless = {
             sqlVersion: "2016-03-23"
           }
         }
-      ]
+      ],
+      tags: {
+        solution: "ServerlessDemo"
+      }
     },
   },
   resources: {
     Resources: {
-      NotificationQueue: {
-        Type: "AWS::SQS::Queue",
-        Properties: {
-          QueueName: "${self:provider.environment.NotificationQueueName}",
-          Tags: [
-            {
-              Key: "solution",
-              Value: "ServerlessDemo"
-            }
-          ]
-        }
-      },
       TasksTable: {
         Type: "AWS::DynamoDB::Table",
         DeletionPolicy: "Retain",

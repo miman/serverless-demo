@@ -29,14 +29,5 @@ export const handleTaskStatusEvent: Handler = async (event: TaskWithTopic, conte
   console.log('IoT Message received: ' + JSON.stringify(event));
   console.log('AWS request Id: ' + context.awsRequestId);
   return taskStatusEventHandler.handleEvent(event, context);
-  /*callback(null, response);
-
-  return {
-    statusCode: 200,
-    body: JSON.stringify({
-      message: 'Executed successfully :-)',
-      input: event,
-    }),
-  };*/ 
 }
 
