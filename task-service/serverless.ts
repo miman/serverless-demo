@@ -86,7 +86,19 @@ const serverlessConfiguration: Serverless = {
           }
         }
       ]
-    }
+    },
+    taskStatusEventHandler: {
+      handler: 'src/handler.handleTaskStatusEvent',
+      events: [
+        {
+          iot: {
+            sql: "SELECT *, topic() AS topic FROM 'viot/+/task/newTask'",
+            name: 'mqttTaskStatusEvent',
+            sqlVersion: "2016-03-23"
+          }
+        }
+      ]
+    },
   },
   resources: {
     Resources: {

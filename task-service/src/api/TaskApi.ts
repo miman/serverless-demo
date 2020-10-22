@@ -6,4 +6,9 @@ export class Task {
     createdTime?: string;
     completedTime?: string;
     description?: string;
+    status?: string;
+}
+
+export class TaskWithTopic extends Task {
+    topic?: string;
 }
