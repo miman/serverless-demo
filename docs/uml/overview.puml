@@ -14,8 +14,6 @@
     !include <awslib/ApplicationIntegration/SNS>
     !include <awslib/Storage/SimpleStorageServiceS3>
 
-    left to right direction
-
     package "Task Service" {
         APIGateway(createTaskApi, "Create Task API", "Creates a task")
         Lambda(createTaskHandler, "Create task handler", "stores the task & sends it to the receivers thing")
