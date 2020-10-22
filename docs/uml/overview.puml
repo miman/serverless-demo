@@ -1,0 +1,59 @@
+@startuml
+    !include <awslib/AWSCommon>
+
+    ' Uncomment the following line to create simplified view
+    !include <awslib/AWSSimplified>
+
+    !include <awslib/General/Users>
+    !include <awslib/Mobile/APIGateway>
+    !include <awslib/SecurityIdentityAndCompliance/Cognito>
+    !include <awslib/Compute/Lambda>
+    !include <awslib/Database/DynamoDB>
+    !include <awslib/InternetOfThings/IoTCore>
+    !include <awslib/ApplicationIntegration/SQS>
+    !include <awslib/ApplicationIntegration/SNS>
+    !include <awslib/Storage/SimpleStorageServiceS3>
+
+    left to right direction
+
+    package "Task Service" {
+        APIGateway(createTaskApi, "Create Task API", "Creates a task")
+        Lambda(createTaskHandler, "Create task handler", "stores the task & sends it to the receivers thing")
+        DynamoDB(taskDb, "Task Database", "Tasks assigned to user")
+
+        APIGateway(getTasksApi, "Get Tasks API", "")
+        Lambda(getTasksHandler, "Get tasks handler", "")
+
+        Lambda(taskStatusEventHandler, "Task status event handler", "")
+        IoTCore(iotCore, "MQTT", "")
+    }
+
+    package "Notification Service" {
+        Lambda(notificationSenderHandler, "Send Notification handler", "")
+
+        SQS(sqsQueue, "Notification mgr queue", "")
+        SNS(snsTopic, "Send SMS Topic", "")
+
+        SimpleStorageServiceS3(s3Bucket, "Event Bucket", "")
+    }
+
+    Users(users, "Events", "millions of users")
+
+    users --> createTaskApi
+    createTaskApi --> createTaskHandler
+    createTaskHandler --> taskDb
+    createTaskHandler --> iotCore: Send task to Thing
+
+    users --> getTasksApi
+    getTasksApi --> getTasksHandler
+    getTasksHandler --> taskDb
+
+    iotCore --> taskStatusEventHandler: Task status update
+    taskStatusEventHandler --> taskDb: Update task
+    taskStatusEventHandler --> sqsQueue: Send notification
+
+    sqsQueue --> notificationSenderHandler
+    notificationSenderHandler --> snsTopic: Send as SMS
+    notificationSenderHandler -down-> s3Bucket: Store event being sent
+
+@enduml
