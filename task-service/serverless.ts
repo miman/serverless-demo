@@ -30,6 +30,7 @@ const serverlessConfiguration: Serverless = {
       IotEndpoint: 'a3o5r22icumisa-ats.iot.eu-west-1.amazonaws.com',
       NotificationQueueName: 'send-notification-${opt:stage, self:provider.stage}',
       TaskTopicName: 'viot/{vehicleId}/task/newTask',
+      TasksDbName: 'tasks',
     },
     iamRoleStatements: [
       {
@@ -50,6 +51,17 @@ const serverlessConfiguration: Serverless = {
           "arn:aws:iot:${opt:region, self:provider.region}:${self:provider.environment.AWS_ACCOUNT_ID}:topic/*"
         ]
       },
+      {
+        Effect: "Allow",
+        Action: [
+          "dynamodb:GetItem",
+          "dynamodb:PutItem",
+          "dynamodb:Query"
+        ],
+        Resource: [
+          "arn:aws:dynamodb:${opt:region, self:provider.region}:${self:provider.environment.AWS_ACCOUNT_ID}:table/${self:provider.environment.TasksDbName}"
+        ]
+      }
     ]
   },
   functions: {
@@ -90,6 +102,40 @@ const serverlessConfiguration: Serverless = {
           ]
         }
       },
+      TasksTable: {
+        Type: "AWS::DynamoDB::Table",
+        DeletionPolicy: "Retain",
+        Properties: {
+          BillingMode: "PAY_PER_REQUEST",
+          AttributeDefinitions: [
+            {
+              AttributeName: "primarykey",
+              AttributeType: "S"
+            },
+            {
+              AttributeName: "sortkey",
+              AttributeType: "S"
+            },
+          ],
+          KeySchema: [
+            {
+              AttributeName: "primarykey",
+              KeyType: "HASH"
+            },
+            {
+              AttributeName: "sortkey",
+              KeyType: "RANGE"
+            },
+          ],
+          TableName: "${self:provider.environment.TasksDbName}",
+          Tags: [
+            {
+              Key: "solution",
+              Value: "ServerlessDemo"
+            }
+          ]
+        }
+      }
     }
   }
 }
