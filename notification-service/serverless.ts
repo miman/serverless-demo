@@ -29,6 +29,7 @@ const serverlessConfiguration: Serverless = {
       AWS_ACCOUNT_ID: propertyReader.readParameter("AWS_ACCOUNT_ID"),
       NotificationQueueName: 'send-notification-${opt:stage, self:provider.stage}',
       NotificationQueueURL: 'https://sqs.${opt:region, self:provider.region}.amazonaws.com/${self:provider.environment.AWS_ACCOUNT_ID}/${self:provider.environment.NotificationQueueName}',
+      NotificationBucketName: 'il-sent-notifications-${opt:stage, self:provider.stage}',
     },
     iamRoleStatements: [
       {
@@ -38,6 +39,16 @@ const serverlessConfiguration: Serverless = {
         ],
         Resource: [
           "*"
+        ]
+      },
+      {
+        Effect: "Allow",
+        Action: [
+          "s3:PutObject",
+          "s3:PutObjectAcl"
+        ],
+        Resource: [
+          "arn:aws:s3:::${self:provider.environment.NotificationBucketName}/*"
         ]
       },
     ]
@@ -64,6 +75,18 @@ const serverlessConfiguration: Serverless = {
         Type: "AWS::SQS::Queue",
         Properties: {
           QueueName: "${self:provider.environment.NotificationQueueName}",
+          Tags: [
+            {
+              Key: "solution",
+              Value: "ServerlessDemo"
+            }
+          ]
+        }
+      },
+      NotificationBucket: {
+        Type: "AWS::S3::Bucket",
+        Properties: {
+          BucketName: "${self:provider.environment.NotificationBucketName}",
           Tags: [
             {
               Key: "solution",
