@@ -37,7 +37,7 @@
         SimpleStorageServiceS3(s3Bucket, "Event Bucket", "")
     }
 
-    Users(users, "Events", "millions of users")
+    Users(users, "Users", "millions of users")
 
     users --> createTaskApi
     createTaskApi --> createTaskHandler
