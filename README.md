@@ -16,7 +16,9 @@ It examplifies the usage of the following infrastructure tools:
 
 # Do this to be able to deploy this project
 For this project to be used you **MUST** add your information to the ***FixMe-props.json*** file
+
 You also **MUST** rename the ***FixMe-props.json*** file to ***props.json*** file
+
 And also remove the last row in this file as described in it
 
 
