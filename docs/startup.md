@@ -21,9 +21,13 @@ In our example code we have choosen to separate the Profile & account info from 
 
 You ***MUST*** create a file in the project root called ***"props.json"*** containing:
 
+As you see the account name from the file above ***myAwsAccount*** is used as profile in this file
+The ***AWS_ACCOUNT_ID*** is found if you login to your AWS page click on your account name dropdown in the top right corner and look at the number after the **My Account** part.
+
+
 ```
 {
-    "profile": "Your profile id for your AWS account",
+    "profile": "myAwsAccount",
     "AWS_ACCOUNT_ID": "The AWS account id you are working in"
 }
 ```
